@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Hitta in, ut, sidledes</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module">
+      import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+      import {ID, TYPE, REVERSE, Index, LD, asArray} from './lxl.mjs'
+
+      const RootComponent = {
+        data() {
+          return {
+            things: this.index.values().filter(it =>
+              it[REVERSE]?.instanceOf || it[TYPE] === 'Work'
+            ),
+            thing: null
+          }
+        },
+        methods: {
+          select(thing, closeall=false) {
+            if (this.thing === thing ||
+                closeall &&
+                this.thing === thing[REVERSE]?.instanceOf[0]) {
+              this.thing = thing.instanceOf
+              return
+            }
+            if (thing[REVERSE]?.instanceOf?.length === 1) {
+              thing = thing[REVERSE].instanceOf[0]
+            }
+            this.thing = thing
+          },
+          workImage(thing) {
+            let imgUrl = thing[REVERSE]?.instanceOf[0]?.thumbnailUrl
+            let bgCss = 'background-image: linear-gradient(rgba(204, 204, 204, 0.8), rgba(204, 204, 204, 1))'
+            if (imgUrl) {
+              bgCss += `, url(${imgUrl})`
+            }
+            return bgCss
+          },
+          download(text) {
+            window.alert(text.label)
+          }
+        },
+        components: {
+          'show-work': {
+            template: '#show-work',
+            props: ['thing', 'fromthing']
+          }
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', async evt => {
+        const data = await (await fetch('./data.jsonld')).json()
+        const index = new Index(data)
+        const ld = new LD()
+        const globals = {ID, TYPE, REVERSE, ld, index, asArray}
+        const app = createApp(RootComponent)
+        Object.assign(app.config.globalProperties, globals)
+        app.mount('#app')
+      })
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <p>
+        <input value="Aniara Harry"> <button v-on:click="thing = null">Hitta</button>
+      </p>
+      <p>
+        Du har lyckats hitta
+        <b typeof="WorkConcept">Aniara</b>
+        som finns som:
+      </p>
+      <menu>
+        <li v-for="g in ld.groupBy(things)" class="group">
+          <button v-for="it in g"
+                  :class="it === thing || it === thing?.instanceOf ? 'selected' : null"
+                  v-on:click="select(it, true)">
+              {{it.typeLabel}}
+              <span v-if="it.language">({{ it.language.label }})</span>
+          </button>
+        </li>
+      </menu>
+      <main v-if="thing">
+        <article :class="thing.instanceOf ? 'specific' : 'general'">
+          <section typeof="Work" class="general" :style="workImage(thing.instanceOf || thing)">
+            <show-work v-if="ld.isA(thing, 'Work')" v-bind:thing="thing">
+            </show-work>
+            <show-work v-if="thing.instanceOf"
+                       v-bind:thing="thing.instanceOf" v-bind:fromthing="thing">
+            </show-work>
+          </section>
+          <template v-if="ld.isA(thing, 'Instance')">
+            <section typeof="Instance" class="specific">
+              <div>
+                <h1>{{thing.typeLabel}}</h1>
+                <p v-for="publ in asArray(thing.publication)">
+                  <time v-if="publ.date">{{ publ.date }}</time>
+                  <span v-if="publ.agent">{{ " " + publ.agent.name }}</span>
+                </p>
+                <h2 v-for="title in asArray(thing.hasTitle)">
+                  {{title.mainTitle}}
+                  <span v-if="title.subtitle">- {{title.subtitle}}</span>
+                  <span v-if="title.typeLabel"> [{{title.typeLabel}}]</span>
+                </h2>
+              </div>
+              <aside>
+                <figure>
+                  <img :src="thing.thumbnailUrl" width="128">
+                </figure>
+              </aside>
+              <div>
+                <p v-if="thing.reproductionOf"> 
+                  <span>Reproduktion av </span>
+                  <button v-on:click="select(thing.reproductionOf)">{{thing.reproductionOf.typeLabel}}</button>
+                </p>
+                <p v-if="thing[REVERSE]?.reproductionOf?.length"> 
+                  <span>Finns även som </span>
+                  <button v-for="repro in thing[REVERSE]?.reproductionOf"
+                      v-on:click="select(repro)">{{repro.typeLabel}}</button>
+                </p>
+              </div>
+              <menu>
+                <li v-for="item in thing[REVERSE].itemOf" v-on:click="download(item)">
+                  <span>{{item.label}}</span>
+                </li>
+              </menu>
+            </section>
+          </template>
+        </article>
+      </main>
+    </div>
+    <template id="show-work">
+      <div>
+        <section>
+          <h1>{{thing.title}} - av {{thing.author.name}}
+            <b typeof="Class">{{thing.typeLabel}}</b>
+          </h1>
+          <p>
+            <b v-for="gf in thing.genreForm" typeof="GenreForm">{{gf.prefLabel}}</b>
+          </p>
+          <p v-if="thing.language">På {{ thing.language.label }}</p>
+          <p v-if="thing.originDate">Från {{ thing.originDate }}</p>
+          <p v-if="thing.responsibilityStatement">{{thing.responsibilityStatement}}</p>
+          <p v-if="thing.translationOf">
+            Översatt från:
+            <button v-on:click="this.$parent.select(thing.translationOf)"
+                    >{{thing.translationOf.language.label}}</button>
+          </p>
+          <p v-if="thing.derivativeOf">
+            Baserad på:
+            <button v-on:click="this.$parent.select(thing.derivativeOf)"
+                    >{{thing.derivativeOf.typeLabel}}</button>
+          </p>
+          <aside v-if="thing[REVERSE]?.derivativeOf?.length > 0 || thing[REVERSE]?.translationOf?.length > 0"
+                 class="reverse">
+            <div v-if="thing[REVERSE]?.translationOf?.length > 0">
+              <span>Finns även översatt till:</span>
+              <menu>
+                <li v-for="trl in thing[REVERSE].translationOf"
+                    v-on:click="this.$parent.select(trl)"
+                    >{{trl.language.label}}</li>
+              </menu>
+            </div>
+            <div v-if="thing[REVERSE]?.derivativeOf?.length > 0">
+              <span>Andra former av verket:</span>
+              <menu>
+                <li v-for="der in thing[REVERSE].derivativeOf"
+                    v-on:click="this.$parent.select(der)"
+                    >{{der.typeLabel}}</li>
+              </menu>
+            </div>
+          </aside>
+        </section>
+        <menu>
+          <li v-for="g in ld.groupBy(thing[REVERSE]?.instanceOf)" class="group">
+            <button v-for="inst in g"
+                :class="inst === fromthing ? 'selected' : null"
+                v-on:click="this.$parent.select(inst)">
+                <span>{{inst.typeLabel}}</span>
+                <span v-for="publ in asArray(inst.publication).slice(0, 1)">
+                  (<time v-if="publ.date">{{ publ.date }}</time>)
+                </span>
+            </button>
+          </li>
+        </menu>
+      </div>
+    </template>
+  </body>
+</html>
