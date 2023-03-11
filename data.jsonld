@@ -5,15 +5,27 @@
   "@graph": [
     {
       "@id": "swedish",
+      "@type": "Language",
       "label": "Svenska"
     },
     {
+      "@id": "finnish",
+      "@type": "Language",
+      "label": "Finska"
+    },
+    {
       "@id": "author1",
+      "@type": "Person",
       "name": "Harry Martinson"
     },
     {
+      "@id": "org1",
+      "@type": "Organization",
+      "name": "Bonniers"
+    },
+    {
       "@id": "work1",
-      "@type": "Work",
+      "@type": "Book",
       "author": {
         "@id": "author1"
       },
@@ -29,12 +41,11 @@
         "@id": "swedish"
       },
       "originDate": "1956",
-      "title": "Aniara",
-      "typeLabel": "Bok"
+      "title": "Aniara"
     },
     {
       "@id": "work2",
-      "@type": "Work",
+      "@type": "Play",
       "author": {
         "@id": "author1"
       },
@@ -54,12 +65,11 @@
       },
       "originDate": "2004",
       "responsibilityStatement": "monolog framställd av Helge Skoog ; musik Gunnar Edander",
-      "title": "Aniara",
-      "typeLabel": "Pjäs"
+      "title": "Aniara"
     },
     {
       "@id": "trl1",
-      "@type": "Work",
+      "@type": "Book",
       "author": {
         "@id": "author1"
       },
@@ -71,19 +81,16 @@
           "prefLabel": "Epos"
         }
       ],
-      "language": {
-        "label": "Finska"
-      },
+      "language": {"@id": "finnish"},
       "originDate": "1956",
       "title": "Aniara",
       "translationOf": {
         "@id": "work1"
-      },
-      "typeLabel": "Bok"
+      }
     },
     {
       "@id": "work3",
-      "@type": "Work",
+      "@type": "Performance",
       "author": {
         "@id": "author1"
       },
@@ -106,17 +113,16 @@
       },
       "originDate": "2011",
       "responsibilityStatement": "Motalas teatersamfund och skolorkester",
-      "title": "Aniara",
-      "typeLabel": "Uppförande"
+      "title": "Aniara"
     },
     {
       "@id": "print1",
-      "@type": "Instance",
+      "@type": "PrintedVolume",
       "hasTitle": [
         {
+          "@type": "CoverTitle",
           "mainTitle": "Aniara",
-          "subtitle": "ett rymdäventyr",
-          "typeLabel": "Omslagstitel"
+          "subtitle": "ett rymdäventyr"
         }
       ],
       "instanceOf": {
@@ -124,14 +130,11 @@
       },
       "publication": [
         {
-          "agent": {
-            "name": "Bonniers"
-          },
+          "agent": {"@id": "org1"},
           "date": "1956"
         }
       ],
-      "thumbnailUrl": "https://boktugg.imgix.net/9789100166182.jpg?w=400",
-      "typeLabel": "Tryckt volym"
+      "thumbnailUrl": "https://boktugg.imgix.net/9789100166182.jpg?w=400"
     },
     {
       "@id": "_:b27",
@@ -149,11 +152,11 @@
     },
     {
       "@id": "print2",
-      "@type": "Instance",
+      "@type": "PrintedVolume",
       "hasTitle": {
+        "@type": "CoverTitle",
         "mainTitle": "Aniara",
-        "subtitle": "Rymdäventyret",
-        "typeLabel": "Omslagstitel"
+        "subtitle": "Rymdäventyret"
       },
       "instanceOf": {
         "@id": "work1"
@@ -163,8 +166,7 @@
           "name": "Nordstedts"
         },
         "date": "1971"
-      },
-      "typeLabel": "Tryckt volym"
+      }
     },
     {
       "@id": "_:b21",
@@ -175,7 +177,7 @@
     },
     {
       "@id": "ebook1",
-      "@type": "Instance",
+      "@type": "EBook",
       "hasTitle": {
         "mainTitle": "Aniara",
         "subtitle": "en revy om människan i tid och rum"
@@ -184,13 +186,10 @@
         "@id": "work1"
       },
       "publication": {
-        "agent": {
-          "name": "Bonniers"
-        },
+          "agent": {"@id": "org1"},
         "date": "2016"
       },
-      "thumbnailUrl": "https://boktugg.imgix.net/9789100166182.jpg?w=400",
-      "typeLabel": "E-bok"
+      "thumbnailUrl": "https://boktugg.imgix.net/9789100166182.jpg?w=400"
     },
     {
       "@id": "_:b34",
@@ -215,7 +214,7 @@
     },
     {
       "@id": "repro1",
-      "@type": "Instance",
+      "@type": "DigitalReproduction",
       "hasTitle": {
         "mainTitle": "Aniara",
         "subtitle": "en revy om människan i tid och rum"
@@ -232,8 +231,7 @@
       "reproductionOf": {
         "@id": "print1"
       },
-      "thumbnailUrl": "https://boktugg.imgix.net/9789100166182.jpg?w=400",
-      "typeLabel": "Digital repr"
+      "thumbnailUrl": "https://boktugg.imgix.net/9789100166182.jpg?w=400"
     },
     {
       "@id": "_:b49",
@@ -244,11 +242,10 @@
     },
     {
       "@id": "audiobook1",
-      "@type": "Instance",
+      "@type": "Audiobook",
       "instanceOf": {
         "@id": "work1"
-      },
-      "typeLabel": "Ljudbok"
+      }
     },
     {
       "@id": "_:b52",
@@ -259,7 +256,7 @@
     },
     {
       "@id": "spokenbook1",
-      "@type": "Instance",
+      "@type": "SpokenBook",
       "instanceOf": {
         "@id": "work1"
       },
@@ -268,8 +265,7 @@
           "name": "MTM"
         },
         "date": "2014"
-      },
-      "typeLabel": "Talbok"
+      }
     },
     {
       "@id": "_:b57",
@@ -280,12 +276,11 @@
     },
     {
       "@id": "manuscript1",
-      "@type": "Instance",
+      "@type": "Manuscript",
       "instanceOf": {
         "@id": "work2"
       },
-      "thumbnailUrl": "https://image.shutterstock.com/image-photo/abstract-retro-unreadable-brown-inkwritten-260nw-1910128066.jpg",
-      "typeLabel": "Manuscript"
+      "thumbnailUrl": "https://image.shutterstock.com/image-photo/abstract-retro-unreadable-brown-inkwritten-260nw-1910128066.jpg"
     },
     {
       "@id": "_:b62",
@@ -296,12 +291,11 @@
     },
     {
       "@id": "video1",
-      "@type": "Instance",
+      "@type": "VideoRecording",
       "instanceOf": {
         "@id": "work3"
       },
-      "thumbnailUrl": "https://image.shutterstock.com/image-photo/empty-stage-theater-lit-by-260nw-603171200.jpg",
-      "typeLabel": "Videoinspelning"
+      "thumbnailUrl": "https://image.shutterstock.com/image-photo/empty-stage-theater-lit-by-260nw-603171200.jpg"
     },
     {
       "@id": "_:b70",

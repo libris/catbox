@@ -58,10 +58,13 @@ function connectNode(node, index) {
         node[key] = o.map(x =>
           typeof x === 'object' && ID in x ?
           index.nodes[x[ID]] || x :
-          x
+          connectNode(x, index)
         )
-      } else if (ID in o) {
-        node[key] = index.nodes[o[ID]] || o
+      } else {
+        connectNode(o, index)
+        if (ID in o) {
+          node[key] = index.nodes[o[ID]] || o
+        }
       }
     }
   }
@@ -72,6 +75,7 @@ function connectNode(node, index) {
       rev[key] = reverses[key].map(ref => index.nodes[ref])
     }
   }
+  return node
 }
 
 export function asArray(o) {
@@ -79,17 +83,66 @@ export function asArray(o) {
 }
 
 export class LD {
-  isA(thing, type) {
-    return thing[TYPE] === type
+  constructor(vocab) {
+    this.termIndex = {}
+    this.typeBaseIndex = {}
+    for (const term of vocab[GRAPH]) {
+      if (ID in term) {
+        this.termIndex[term[ID]] = term
+      }
+      if (term.subClassOf && ID in term.subClassOf) {
+        this.typeBaseIndex[term[ID]] = term.subClassOf[ID]
+      }
+    }
   }
-  groupBy(things, key='typeLabel') {
+
+  getTerm(id) {
+    return this.termIndex[id]
+  }
+
+  isA(thing, type) {
+    let t = thing[TYPE]
+    while (t != null) {
+      if (t === type) return true
+      let next = this.typeBaseIndex[t]
+      if (next === t) break // cycle
+      t = next
+    }
+    return false
+  }
+
+  getTypeLabelFor(thing) {
+    return this.getTerm(thing[TYPE])?.label
+  }
+
+  groupByType(things, category=null) {
     if (things == null) return []
+    let termByKey = {}
     let groupsByKey = {}
     for (let thing of things) {
-      let g = groupsByKey[thing[key]]
-      if (g == null) g = groupsByKey[thing[key]] = []
-      g.push(thing)
+      let t = thing[TYPE]
+      let term = this.getTerm(t)
+      if (category) {
+        term = this.findBaseTermInCategory(term, category) || term
+      }
+      let key = term[ID]
+      let g = groupsByKey[key]
+      if (g == null) {
+        g = groupsByKey[key] = {term, members: []}
+      }
+      g.members.push(thing)
     }
     return Object.values(groupsByKey)
+  }
+
+  findBaseTermInCategory(term, category) {
+    let current = term
+    while (current != null) {
+      if (current.category === category) break
+      let next = this.getTerm(this.typeBaseIndex[current[ID]])
+      if (next === current) break // cycle
+      current = next
+    }
+    return current
   }
 }

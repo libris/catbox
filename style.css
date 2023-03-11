@@ -137,7 +137,7 @@ menu > li {
 menu > li.group {
   padding: 0;
   border: none;
-  vertical-align: middle;
+  vertical-align: top;
   box-shadow: none;
   border-radius: none;
   background: none;

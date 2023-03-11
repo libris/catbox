@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Hitta in, ut, sidledes</title>
+    <title>Hitta i katalogen</title>
     <link rel="stylesheet" href="style.css" />
     <script type="module">
       import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
@@ -12,7 +12,7 @@
         data() {
           return {
             things: this.index.values().filter(it =>
-              it[REVERSE]?.instanceOf || it[TYPE] === 'Work'
+              it[REVERSE]?.instanceOf || this.ld.isA(it, 'Work')
             ),
             thing: null
           }
@@ -51,9 +51,12 @@
       }
 
       window.addEventListener('DOMContentLoaded', async evt => {
-        const data = await (await fetch('./data.jsonld')).json()
+        const [vocab, data] = await Promise.all([
+          (await fetch('./vocab.jsonld')).json(),
+          (await fetch('./data.jsonld')).json()
+        ])
         const index = new Index(data)
-        const ld = new LD()
+        const ld = new LD(vocab)
         const globals = {ID, TYPE, REVERSE, ld, index, asArray}
         const app = createApp(RootComponent)
         Object.assign(app.config.globalProperties, globals)
@@ -72,11 +75,11 @@
         som finns som:
       </p>
       <menu>
-        <li v-for="g in ld.groupBy(things)" class="group">
-          <button v-for="it in g"
+        <li v-for="g in ld.groupByType(things)" class="group">
+          <button v-for="it in g.members"
                   :class="it === thing || it === thing?.instanceOf ? 'selected' : null"
                   v-on:click="select(it, true)">
-              {{it.typeLabel}}
+              {{ld.getTypeLabelFor((it))}}
               <span v-if="it.language">({{ it.language.label }})</span>
           </button>
         </li>
@@ -93,7 +96,7 @@
           <template v-if="ld.isA(thing, 'Instance')">
             <section typeof="Instance" class="specific">
               <div>
-                <h1>{{thing.typeLabel}}</h1>
+                <h1>{{ld.getTypeLabelFor(thing)}}</h1>
                 <p v-for="publ in asArray(thing.publication)">
                   <time v-if="publ.date">{{ publ.date }}</time>
                   <span v-if="publ.agent">{{ " " + publ.agent.name }}</span>
@@ -101,7 +104,7 @@
                 <h2 v-for="title in asArray(thing.hasTitle)">
                   {{title.mainTitle}}
                   <span v-if="title.subtitle">- {{title.subtitle}}</span>
-                  <span v-if="title.typeLabel"> [{{title.typeLabel}}]</span>
+                  <span v-if="ld.getTypeLabelFor(title)"> [{{ld.getTypeLabelFor(title)}}]</span>
                 </h2>
               </div>
               <aside>
@@ -112,12 +115,12 @@
               <div>
                 <p v-if="thing.reproductionOf"> 
                   <span>Reproduktion av </span>
-                  <button v-on:click="select(thing.reproductionOf)">{{thing.reproductionOf.typeLabel}}</button>
+                  <button v-on:click="select(thing.reproductionOf)">{{ld.getTypeLabelFor(thing.reproductionOf)}}</button>
                 </p>
                 <p v-if="thing[REVERSE]?.reproductionOf?.length"> 
-                  <span>Finns även som </span>
+                  <span>Finns reproducerad som </span>
                   <button v-for="repro in thing[REVERSE]?.reproductionOf"
-                      v-on:click="select(repro)">{{repro.typeLabel}}</button>
+                      v-on:click="select(repro)">{{ld.getTypeLabelFor(repro)}}</button>
                 </p>
               </div>
               <menu>
@@ -134,7 +137,7 @@
       <div>
         <section>
           <h1>{{thing.title}} - av {{thing.author.name}}
-            <b typeof="Class">{{thing.typeLabel}}</b>
+            <b typeof="Class">{{ld.getTypeLabelFor(thing)}}</b>
           </h1>
           <p>
             <b v-for="gf in thing.genreForm" typeof="GenreForm">{{gf.prefLabel}}</b>
@@ -148,14 +151,14 @@
                     >{{thing.translationOf.language.label}}</button>
           </p>
           <p v-if="thing.derivativeOf">
-            Baserad på:
+            Baserad på
             <button v-on:click="this.$parent.select(thing.derivativeOf)"
-                    >{{thing.derivativeOf.typeLabel}}</button>
+                    >{{ld.getTypeLabelFor(thing.derivativeOf)}}</button>
           </p>
           <aside v-if="thing[REVERSE]?.derivativeOf?.length > 0 || thing[REVERSE]?.translationOf?.length > 0"
                  class="reverse">
             <div v-if="thing[REVERSE]?.translationOf?.length > 0">
-              <span>Finns även översatt till:</span>
+              <span>Finns även översatt till</span>
               <menu>
                 <li v-for="trl in thing[REVERSE].translationOf"
                     v-on:click="this.$parent.select(trl)"
@@ -163,21 +166,22 @@
               </menu>
             </div>
             <div v-if="thing[REVERSE]?.derivativeOf?.length > 0">
-              <span>Andra former av verket:</span>
+              <span>Andra former av verket</span>
               <menu>
                 <li v-for="der in thing[REVERSE].derivativeOf"
                     v-on:click="this.$parent.select(der)"
-                    >{{der.typeLabel}}</li>
+                    >{{ld.getTypeLabelFor(der)}}</li>
               </menu>
             </div>
           </aside>
         </section>
-        <menu>
-          <li v-for="g in ld.groupBy(thing[REVERSE]?.instanceOf)" class="group">
-            <button v-for="inst in g"
+        <menu :set="mediaGroups = ld.groupByType(thing[REVERSE]?.instanceOf, 'Media')">
+          <li v-for="g in mediaGroups" class="group">
+            <i v-if="mediaGroups.length > 1">{{g.term.label}}</i>
+            <button v-for="inst in g.members"
                 :class="inst === fromthing ? 'selected' : null"
                 v-on:click="this.$parent.select(inst)">
-                <span>{{inst.typeLabel}}</span>
+                <span>{{ld.getTypeLabelFor(inst)}}</span>
                 <span v-for="publ in asArray(inst.publication).slice(0, 1)">
                   (<time v-if="publ.date">{{ publ.date }}</time>)
                 </span>

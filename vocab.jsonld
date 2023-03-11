@@ -1,0 +1,31 @@
+{
+  "@context": {
+    "@vocab": "https://id.kb.se/vocab/",
+    "@base": "https://id.kb.se/vocab/",
+    "category": {"@id": "category", "@type": "@vocab"}
+  },
+  "@graph": [
+    {"@id": "Literature", "subClassOf": {"@id": "Work"}, "label": "Litterature"},
+    {"@id": "Book", "subClassOf": {"@id": "Work"}, "label": "Bok"},
+    {"@id": "Play", "subClassOf": {"@id": "Work"}, "label": "Pjäs"},
+    {"@id": "Performance", "subClassOf": {"@id": "Work"}, "label": "Uppträdande"},
+
+    {"@id": "Manuscript", "category": "Media", "subClassOf": {"@id": "Instance"}, "label": "Manuscript"},
+
+    {"@id": "Print", "category": "Media", "subClassOf": {"@id": "Instance"}, "label": "Tryck"},
+    {"@id": "PrintedVolume", "subClassOf": {"@id": "Print"}, "label": "Tryckt volym"},
+
+    {"@id": "Electronic", "category": "Media", "subClassOf": {"@id": "Instance"}, "label": "Elektronisk"},
+    {"@id": "EBook", "subClassOf": {"@id": "Electronic"}, "label": "E-bok"},
+    {"@id": "DigitalReproduction", "subClassOf": {"@id": "Electronic"}, "label": "Digital reproduktion"},
+
+    {"@id": "Audio", "category": "Media", "subClassOf": {"@id": "Instance"}, "label": "Ljud"},
+    {"@id": "Audiobook", "subClassOf": {"@id": "Audio"}, "label": "Ljudbok"},
+    {"@id": "SpokenBook", "subClassOf": {"@id": "Audio"}, "label": "Talbok"},
+
+    {"@id": "Video", "category": "Media", "subClassOf": {"@id": "Instance"}, "label": "Video"},
+    {"@id": "VideoRecording", "subClassOf": {"@id": "Video"}, "label": "Videoinspelning"},
+
+    {"@id": "CoverTitle", "subClassOf": {"@id": "Title"}, "label": "Omslagstitel"}
+  ]
+}
