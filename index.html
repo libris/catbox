@@ -32,7 +32,7 @@
           },
           workImage(thing) {
             let imgUrl = thing[REVERSE]?.instanceOf[0]?.thumbnailUrl
-            let bgCss = 'background-image: linear-gradient(rgba(204, 204, 204, 0.8), rgba(204, 204, 204, 1))'
+            let bgCss = 'background-image: linear-gradient(var(--bg-grad-start), var(--bg-grad-stop))'
             if (imgUrl) {
               bgCss += `, url(${imgUrl})`
             }

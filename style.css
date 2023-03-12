@@ -1,10 +1,22 @@
 body {
   margin: 0;
   padding: 0;
-  background: #ddd;
-  color: #111;
+  background: var(--bg);
+  color: var(--textcolor);
   font-family: Verdana, "Bitstream Vera Sans", "DejaVu Sans", Tahoma, Geneva, Arial, Sans-serif;
   font-size: 16px;
+  --bg: #ddd;
+  --textcolor: #111;
+  --ridgecolor: #aaa;
+  --boxcolor: #ccc;
+  --buttoncolor: #eee;
+  --buttonpressed: #ccc;
+  --typecolor: #7ee;
+  --categorycolor: #afa;
+  --conceptcolor: #dbf;
+  --workconceptcolor: #fca;
+  --bg-grad-start: rgba(204, 204, 204, 0.8);
+  --bg-grad-stop: rgba(204, 204, 204, 1);
 }
 
 main {
@@ -42,7 +54,7 @@ section {
 
 section[typeof] {
   position: relative;
-  border: 1px ridge #aaa;
+  border: 1px ridge var(--ridgecolor);
 }
 section.specific > div {
   width: 70%;
@@ -66,7 +78,7 @@ article.specific section.general {
 section.specific {
   padding: 0.8em 0.4em;
   box-shadow: inset 0px 10px 10px rgba(0, 0, 0, 0.4);
-  background: #ccc;
+  background: var(--boxcolor);
   min-height: 24ex;
   border-radius: 0 0 var(--boxcorner) var(--boxcorner);
 }
@@ -96,7 +108,7 @@ aside.reverse {
   margin: 1em 0;
   position: absolute;
   right: -2em;
-  background: #ccc;
+  background: var(--boxcolor);
   border-radius: var(--boxcorner);
 }
 
@@ -129,7 +141,7 @@ menu > li {
   padding: 0em 1em;
   margin: 0.1em;
   border: 2px outset;
-  background: #eee;
+  background: var(--buttoncolor);
   box-shadow: outset 0px 2px 2px rgba(0, 0, 0, 0.2);
   border-radius: 0.3em;
   font-size: 1rem;
@@ -149,7 +161,7 @@ menu > li.group > button {
 button.selected,
 menu > li.selected {
   border: 3px inset;
-  background: #ccc;
+  background: var(--buttonpressed);
 }
 
 b[typeof] {
@@ -161,11 +173,14 @@ b[typeof] {
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
 }
 b[typeof=Class] {
-  background: #7ee;
+  background: var(--typecolor);
 }
 b[typeof=GenreForm] {
-  background: #afa;
+  background: var(--categorycolor);
+}
+b[typeof=Concept] {
+  background: var(--conceptcolor);
 }
 b[typeof=WorkConcept] {
-  background: #fca;
+  background: var(--workconceptcolor);
 }
