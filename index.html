@@ -35,7 +35,7 @@
             this.thing = thing
           },
           workImage(thing) {
-            let imgUrl = thing[REVERSE]?.instanceOf[0]?.thumbnailUrl
+            let imgUrl = thing[REVERSE]?.instanceOf?.[0]?.thumbnailUrl
             let bgCss = 'background-image: linear-gradient(var(--bg-grad-start), var(--bg-grad-stop))'
             if (imgUrl) {
               bgCss += `, url(${imgUrl})`
@@ -140,15 +140,15 @@
             <section typeof="Instance" class="specific">
               <div>
                 <h1>{{ld.getTypeLabelFor(thing)}}</h1>
-                <p v-for="publ in asArray(thing.publication)">
-                  <time v-if="publ.date">{{ publ.date }}</time>
-                  <span v-if="publ.agent">{{ " " + publ.agent.name }}</span>
-                </p>
                 <h2 v-for="title in asArray(thing.hasTitle)">
                   {{title.mainTitle}}
                   <span v-if="title.subtitle">- {{title.subtitle}}</span>
                   <span v-if="ld.getTypeLabelFor(title)"> [{{ld.getTypeLabelFor(title)}}]</span>
                 </h2>
+                <p v-for="publ in asArray(thing.publication)">
+                  <time v-if="publ.date">{{ publ.date }}</time>
+                  <b typeof="Agent" v-if="publ.agent">{{ " " + publ.agent.name }}</b>
+                </p>
               </div>
               <aside>
                 <figure>
@@ -178,26 +178,40 @@
     </div>
     <template id="show-work">
       <div>
-        <section>
-          <h1>{{thing.title}} - av {{thing.author.name}}
-            <b typeof="Class">{{ld.getTypeLabelFor(thing)}}</b>
-          </h1>
-          <p>
-            <b v-for="gf in thing.genreForm" typeof="GenreForm">{{gf.prefLabel}}</b>
-          </p>
-          <p v-if="thing.language">På {{ thing.language.label }}</p>
-          <p v-if="thing.originDate">Från {{ thing.originDate }}</p>
-          <p v-if="thing.responsibilityStatement">{{thing.responsibilityStatement}}</p>
-          <p v-if="thing.translationOf">
-            Översatt från:
-            <button v-on:click="this.$parent.select(thing.translationOf)"
-                    >{{thing.translationOf.language.label}}</button>
-          </p>
-          <p v-if="thing.derivativeOf">
-            Baserad på
-            <button v-on:click="this.$parent.select(thing.derivativeOf)"
-                    >{{ld.getTypeLabelFor(thing.derivativeOf)}}</button>
-          </p>
+        <section class="about">
+          <div class="details">
+            <header>
+              <h1>
+                {{thing.title}}
+                <b typeof="Class">{{ld.getTypeLabelFor(thing)}}</b>
+              </h1>
+              <p>
+                av <b typeof="Agent">{{(thing.author || thing.creator).name}}</b>
+              </p>
+            </header>
+            <p v-if="thing.language">På <b typeof>{{ thing.language.label }}</b></p>
+            <p v-if="thing.translator">av {{ thing.translator.name }}</p>
+            <p v-if="thing.originDate">Från {{ thing.originDate }}</p>
+            <p v-if="thing.responsibilityStatement">{{thing.responsibilityStatement}}</p>
+          </div>
+          <div class="context">
+            <p>
+              <b v-for="gf in thing.genreForm" typeof="GenreForm">{{gf.prefLabel}}</b>
+            </p>
+            <p>
+              <b v-for="subj in thing.subject" typeof="Concept">{{subj.prefLabel}}</b>
+            </p>
+            <p v-if="thing.translationOf">
+              Översatt från:
+              <button v-on:click="this.$parent.select(thing.translationOf)"
+                      >{{thing.translationOf.language.label}}</button>
+            </p>
+            <p v-if="thing.derivativeOf">
+              Baserad på
+              <button v-on:click="this.$parent.select(thing.derivativeOf)"
+                      >{{ld.getTypeLabelFor(thing.derivativeOf)}}</button>
+            </p>
+          </div>
           <aside v-if="thing[REVERSE]?.derivativeOf?.length > 0 || thing[REVERSE]?.translationOf?.length > 0"
                  class="reverse">
             <div v-if="thing[REVERSE]?.translationOf?.length > 0">

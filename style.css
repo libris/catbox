@@ -103,6 +103,17 @@ aside {
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
+section.about {
+  display: flex;
+  width: 70%;
+}
+section.about > .details {
+  flex: 3;
+}
+section.about > .context {
+  flex: 2;
+}
+
 aside.reverse {
   padding: 0.5em 0.75em;
   margin: 1em 0;
@@ -158,9 +169,10 @@ menu > li.group > button {
   display: block;
 }
 
+button:active,
 button.selected,
 menu > li.selected {
-  border: 3px inset;
+  border: 2px inset;
   background: var(--buttonpressed);
 }
 
@@ -171,6 +183,15 @@ b[typeof] {
   padding: 0.67em 1.34em;
   margin: 0.1em 0.3em;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+button b[typeof] {
+  vertical-align: top;
+  padding: 0.1em 0.4em;
+}
+h1 b[typeof] {
+  padding: 0.2em 1.2em;
+  font-size: 0.9rem;
+  margin: 0 0.8em 0 0;
 }
 b[typeof=Class] {
   background: var(--typecolor);
