@@ -14,9 +14,34 @@
       "label": "Finska"
     },
     {
-      "@id": "author1",
+      "@id": "english",
+      "@type": "Language",
+      "label": "Engelska"
+    },
+    {
+      "@id": "harrymartinson",
       "@type": "Person",
       "name": "Harry Martinson"
+    },
+    {
+      "@id": "jrrtolkien",
+      "@type": "Person",
+      "name": "J.R.R. Tolkien"
+    },
+    {
+      "@id": "akeohlmarks",
+      "@type": "Person",
+      "name": "Åke Ohlmarks"
+    },
+    {
+      "@id": "erikandersson",
+      "@type": "Person",
+      "name": "Erik Andersson"
+    },
+    {
+      "@id": "peterjackson",
+      "@type": "Person",
+      "name": "Peter Jackson"
     },
     {
       "@id": "org1",
@@ -24,40 +49,124 @@
       "name": "Bonniers"
     },
     {
+      "@id": "org2",
+      "@type": "Organization",
+      "name": "Nordstedts"
+    },
+    {
+      "@id": "org3",
+      "@type": "Organization",
+      "name": "Kungliga biblioteket"
+    },
+    {
+      "@id": "sciencefiction",
+      "@type": "GenreForm",
+      "prefLabel": "Science fiction"
+    },
+    {
+      "@id": "fantasy",
+      "@type": "GenreForm",
+      "prefLabel": "Fantasy"
+    },
+    {
+      "@id": "epos",
+      "@type": "GenreForm",
+      "prefLabel": "Epos"
+    },
+    {
+      "@id": "dramatik",
+      "@type": "GenreForm",
+      "prefLabel": "Dramatik"
+    },
+    {
+      "@id": "teater",
+      "@type": "GenreForm",
+      "prefLabel": "Teater"
+    },
+    {
+      "@id": "rymden",
+      "@type": "Topic",
+      "prefLabel": "Rymden"
+    },
+    {
+      "@id": "manniskan",
+      "@type": "Topic",
+      "prefLabel": "Människan"
+    },
+    {
+      "@id": "ringar",
+      "@type": "Topic",
+      "prefLabel": "Ringar"
+    },
+    {
+      "@id": "magi",
+      "@type": "Topic",
+      "prefLabel": "Magi"
+    },
+    {
+      "@id": "middleearth",
+      "@type": "Topic",
+      "prefLabel": "Midgård"
+    },
+    {
+      "@id": "aniara",
+      "@type": "WorkConcept",
+      "prefLabel": "Aniara"
+    },
+    {
+      "@id": "lotr",
+      "@type": "WorkConcept",
+      "prefLabel": "Sagan om ringen"
+    },
+    {
       "@id": "work1",
       "@type": "Book",
       "author": {
-        "@id": "author1"
+        "@id": "harrymartinson"
+      },
+      "expressionOf": {
+        "@id": "aniara"
       },
       "genreForm": [
         {
-          "prefLabel": "Science fiction"
+          "@id": "sciencefiction"
         },
         {
-          "prefLabel": "Epos"
+          "@id": "epos"
         }
       ],
       "language": {
         "@id": "swedish"
       },
       "originDate": "1956",
+      "subject": [
+        {
+          "@id": "rymden"
+        },
+        {
+          "@id": "manniskan"
+        }
+      ],
       "title": "Aniara"
     },
     {
       "@id": "work2",
       "@type": "Play",
       "author": {
-        "@id": "author1"
+        "@id": "harrymartinson"
+      },
+      "expressionOf": {
+        "@id": "aniara"
       },
       "derivativeOf": {
         "@id": "work1"
       },
       "genreForm": [
         {
-          "prefLabel": "Science Fiction"
+          "@id": "sciencefiction"
         },
         {
-          "prefLabel": "Dramatik"
+          "@id": "dramatik"
         }
       ],
       "language": {
@@ -71,17 +180,22 @@
       "@id": "trl1",
       "@type": "Book",
       "author": {
-        "@id": "author1"
+        "@id": "harrymartinson"
+      },
+      "expressionOf": {
+        "@id": "aniara"
       },
       "genreForm": [
         {
-          "prefLabel": "Science fiction"
+          "@id": "sciencefiction"
         },
         {
-          "prefLabel": "Epos"
+          "@id": "epos"
         }
       ],
-      "language": {"@id": "finnish"},
+      "language": {
+        "@id": "finnish"
+      },
       "originDate": "1956",
       "title": "Aniara",
       "translationOf": {
@@ -92,20 +206,23 @@
       "@id": "work3",
       "@type": "Performance",
       "author": {
-        "@id": "author1"
+        "@id": "harrymartinson"
+      },
+      "expressionOf": {
+        "@id": "aniara"
       },
       "derivativeOf": {
         "@id": "work2"
       },
       "genreForm": [
         {
-          "prefLabel": "Science Fiction"
+          "@id": "sciencefiction"
         },
         {
-          "prefLabel": "Dramatik"
+          "@id": "dramatik"
         },
         {
-          "prefLabel": "Teater"
+          "@id": "teater"
         }
       ],
       "language": {
@@ -118,33 +235,31 @@
     {
       "@id": "print1",
       "@type": "PrintedVolume",
-      "hasTitle": [
-        {
-          "@type": "CoverTitle",
-          "mainTitle": "Aniara",
-          "subtitle": "ett rymdäventyr"
-        }
-      ],
+      "hasTitle": {
+        "@type": "CoverTitle",
+        "mainTitle": "Aniara",
+        "subtitle": "ett rymdäventyr"
+      },
       "instanceOf": {
         "@id": "work1"
       },
-      "publication": [
-        {
-          "agent": {"@id": "org1"},
-          "date": "1956"
-        }
-      ],
+      "publication": {
+        "agent": {
+          "@id": "org1"
+        },
+        "date": "1956"
+      },
       "thumbnailUrl": "https://boktugg.imgix.net/9789100166182.jpg?w=400"
     },
     {
-      "@id": "_:b27",
+      "@id": "item1",
       "itemOf": {
         "@id": "print1"
       },
       "label": "Inbunden (förord saknas) på Motala stadsbibliotek"
     },
     {
-      "@id": "_:b46",
+      "@id": "item2",
       "itemOf": {
         "@id": "print1"
       },
@@ -163,13 +278,13 @@
       },
       "publication": {
         "agent": {
-          "name": "Nordstedts"
+          "@id": "org2"
         },
         "date": "1971"
       }
     },
     {
-      "@id": "_:b21",
+      "@id": "item3",
       "itemOf": {
         "@id": "print2"
       },
@@ -186,27 +301,29 @@
         "@id": "work1"
       },
       "publication": {
-          "agent": {"@id": "org1"},
+        "agent": {
+          "@id": "org1"
+        },
         "date": "2016"
       },
       "thumbnailUrl": "https://boktugg.imgix.net/9789100166182.jpg?w=400"
     },
     {
-      "@id": "_:b34",
+      "@id": "item4",
       "itemOf": {
         "@id": "ebook1"
       },
       "label": "Ladda ner PDF (ej maskinuppläsbar)"
     },
     {
-      "@id": "_:b35",
+      "@id": "item5",
       "itemOf": {
         "@id": "ebook1"
       },
       "label": "Ladda ner EPub 3.0 (text & bild)"
     },
     {
-      "@id": "_:b36",
+      "@id": "item6",
       "itemOf": {
         "@id": "ebook1"
       },
@@ -224,7 +341,7 @@
       },
       "publication": {
         "agent": {
-          "name": "Kungliga biblioteket"
+          "@id": "org3"
         },
         "date": "2023"
       },
@@ -234,7 +351,7 @@
       "thumbnailUrl": "https://boktugg.imgix.net/9789100166182.jpg?w=400"
     },
     {
-      "@id": "_:b49",
+      "@id": "item7",
       "itemOf": {
         "@id": "repro1"
       },
@@ -248,7 +365,7 @@
       }
     },
     {
-      "@id": "_:b52",
+      "@id": "item8",
       "itemOf": {
         "@id": "audiobook1"
       },
@@ -268,7 +385,7 @@
       }
     },
     {
-      "@id": "_:b57",
+      "@id": "item9",
       "itemOf": {
         "@id": "spokenbook1"
       },
@@ -283,7 +400,7 @@
       "thumbnailUrl": "https://image.shutterstock.com/image-photo/abstract-retro-unreadable-brown-inkwritten-260nw-1910128066.jpg"
     },
     {
-      "@id": "_:b62",
+      "@id": "item10",
       "itemOf": {
         "@id": "manuscript1"
       },
@@ -298,11 +415,162 @@
       "thumbnailUrl": "https://image.shutterstock.com/image-photo/empty-stage-theater-lit-by-260nw-603171200.jpg"
     },
     {
-      "@id": "_:b70",
+      "@id": "item11",
       "itemOf": {
         "@id": "video1"
       },
       "label": "Strömmande film - MPEG"
+    },
+    {
+      "@id": "work4",
+      "@type": "Book",
+      "author": {
+        "@id": "jrrtolkien"
+      },
+      "expressionOf": {
+        "@id": "lotr"
+      },
+      "genreForm": [
+        {
+          "@id": "fantasy"
+        },
+        {
+          "@id": "epos"
+        }
+      ],
+      "language": {
+        "@id": "english"
+      },
+      "originDate": "1956",
+      "subject": [
+        {
+          "@id": "ringar"
+        },
+        {
+          "@id": "magi"
+        },
+        {
+          "@id": "middleearth"
+        }
+      ],
+      "title": "Lord of The Rings"
+    },
+    {
+      "@id": "work5",
+      "@type": "Book",
+      "author": {
+        "@id": "jrrtolkien"
+      },
+      "expressionOf": {
+        "@id": "lotr"
+      },
+      "translator": {
+        "@id": "akeohlmarks"
+      },
+      "genreForm": [
+        {
+          "@id": "fantasy"
+        },
+        {
+          "@id": "epos"
+        }
+      ],
+      "language": {
+        "@id": "swedish"
+      },
+      "translationOf": {
+        "@id": "work4"
+      },
+      "originDate": "1959",
+      "subject": [
+        {
+          "@id": "ringar"
+        },
+        {
+          "@id": "magi"
+        },
+        {
+          "@id": "middleearth"
+        }
+      ],
+      "title": "Sagan om ringen"
+    },
+    {
+      "@id": "work6",
+      "@type": "Book",
+      "author": {
+        "@id": "jrrtolkien"
+      },
+      "expressionOf": {
+        "@id": "lotr"
+      },
+      "translator": {
+        "@id": "erikandersson"
+      },
+      "genreForm": [
+        {
+          "@id": "fantasy"
+        },
+        {
+          "@id": "epos"
+        }
+      ],
+      "language": {
+        "@id": "swedish"
+      },
+      "translationOf": {
+        "@id": "work4"
+      },
+      "originDate": "2004",
+      "subject": [
+        {
+          "@id": "ringar"
+        },
+        {
+          "@id": "magi"
+        },
+        {
+          "@id": "middleearth"
+        }
+      ],
+      "title": "Härskarringen"
+    },
+    {
+      "@id": "work7",
+      "@type": "Movie",
+      "creator": {
+        "@id": "peterjackson"
+      },
+      "derivativeOf": {
+        "@id": "work4"
+      },
+      "expressionOf": {
+        "@id": "lotr"
+      },
+      "genreForm": [
+        {
+          "@id": "fantasy"
+        },
+        {
+          "@id": "epos"
+        }
+      ],
+      "language": {
+        "@id": "english"
+      },
+      "originDate": "2004",
+      "subject": [
+        {
+          "@id": "ringar"
+        },
+        {
+          "@id": "magi"
+        },
+        {
+          "@id": "middleearth"
+        }
+      ],
+      "title": "Lord of The Rings"
     }
   ]
 }

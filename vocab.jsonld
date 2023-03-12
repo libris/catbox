@@ -9,6 +9,7 @@
     {"@id": "Book", "subClassOf": {"@id": "Work"}, "label": "Bok"},
     {"@id": "Play", "subClassOf": {"@id": "Work"}, "label": "Pjäs"},
     {"@id": "Performance", "subClassOf": {"@id": "Work"}, "label": "Uppträdande"},
+    {"@id": "Movie", "subClassOf": {"@id": "Work"}, "label": "Film"},
 
     {"@id": "Manuscript", "category": "Media", "subClassOf": {"@id": "Instance"}, "label": "Manuscript"},
 
