@@ -5,18 +5,18 @@ body {
   color: var(--textcolor);
   font-family: Verdana, "Bitstream Vera Sans", "DejaVu Sans", Tahoma, Geneva, Arial, Sans-serif;
   font-size: 16px;
-  --bg: #ddd;
+  --bg: #e4dcd0;
   --textcolor: #111;
   --ridgecolor: #aaa;
-  --boxcolor: #ccc;
-  --buttoncolor: #eee;
-  --buttonpressed: #ccc;
+  --boxcolor: #dad3c9;
+  --buttoncolor: #f1e9d9;
+  --buttonpressed: #d0cabc;
+  --bg-grad-start: rgba(224, 214, 204, 0.8);
+  --bg-grad-stop: rgba(224, 214, 204, 1);
   --typecolor: #7ee;
   --categorycolor: #afa;
   --conceptcolor: #dbf;
   --workconceptcolor: #fca;
-  --bg-grad-start: rgba(204, 204, 204, 0.8);
-  --bg-grad-stop: rgba(204, 204, 204, 1);
 }
 
 main {
