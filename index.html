@@ -11,17 +11,21 @@
       const RootComponent = {
         data() {
           return {
-            things: this.index.values().filter(it =>
-              it[REVERSE]?.instanceOf || this.ld.isA(it, 'Work')
-            ),
+            q: "*",
+            things: [],
             thing: null
           }
         },
         methods: {
+          find() {
+            this.thing = null
+            this.things = findInIndex(this.ld, this.index, this.q)
+          },
           select(thing, closeall=false) {
             if (this.thing === thing ||
-                closeall &&
-                this.thing === thing[REVERSE]?.instanceOf[0]) {
+                (closeall &&
+                thing[REVERSE]?.instanceOf &&
+                this.thing === thing[REVERSE]?.instanceOf[0])) {
               this.thing = thing.instanceOf
               return
             }
@@ -50,6 +54,32 @@
         }
       }
 
+      let searchProps = ['title', 'prefLabel', 'name', 'label']
+
+      function findInIndex(ld, index, q) {
+        return index.values().filter(it =>
+          (ld.isA(it, 'Work') || it[REVERSE]?.instanceOf) &&
+          (q === '*' ||
+           searchProps.find(p => it[p]?.toLowerCase().indexOf(q) > -1))
+        )
+      }
+
+      function groupBy(things, p) {
+        if (things == null) return []
+        let termByKey = {}
+        let groupsByKey = {}
+        for (let thing of things) {
+          let by = thing[p]
+          let key = by?.[ID] || '_'
+          let g = groupsByKey[key]
+          if (g == null) {
+            g = groupsByKey[key] = {by, members: []}
+          }
+          g.members.push(thing)
+        }
+        return Object.values(groupsByKey)
+      }
+
       window.addEventListener('DOMContentLoaded', async evt => {
         const [vocab, data] = await Promise.all([
           (await fetch('./vocab.jsonld')).json(),
@@ -57,7 +87,7 @@
         ])
         const index = new Index(data)
         const ld = new LD(vocab)
-        const globals = {ID, TYPE, REVERSE, ld, index, asArray}
+        const globals = {ID, TYPE, REVERSE, ld, index, asArray, groupBy}
         const app = createApp(RootComponent)
         Object.assign(app.config.globalProperties, globals)
         app.mount('#app')
@@ -67,23 +97,36 @@
   <body>
     <div id="app">
       <p>
-        <input value="Aniara Harry"> <button v-on:click="thing = null">Hitta</button>
+        <input v-model="q"
+               v-on:focus="q = q == '*' ? '' : q"
+               v-on:blur="q = q == '' ? '*' : q"
+               v-on:keyup="find()">
+        <button v-on:click="find()">Hitta</button>
       </p>
-      <p>
-        Du har lyckats hitta
-        <b typeof="WorkConcept">Aniara</b>
-        som finns som:
-      </p>
-      <menu>
-        <li v-for="g in ld.groupByType(things)" class="group">
-          <button v-for="it in g.members"
-                  :class="it === thing || it === thing?.instanceOf ? 'selected' : null"
-                  v-on:click="select(it, true)">
-              {{ld.getTypeLabelFor((it))}}
-              <span v-if="it.language">({{ it.language.label }})</span>
-          </button>
-        </li>
-      </menu>
+      <section class="results"
+               v-for="wg in groupBy(things, 'expressionOf')">
+        <template v-if="thing == null ||
+            wg.members.find(it => it === thing || it === thing.instanceOf)">
+          <p>
+            Hittade
+            <template v-if="wg.by">
+              <b typeof="WorkConcept">{{wg.by.prefLabel}}</b>
+              som finns som:
+            </template>
+          </p>
+          <menu>
+            <li v-for="g in ld.groupByType(wg.members)" class="group">
+              <button v-for="it in g.members"
+                      :class="it === thing || it === thing?.instanceOf ? 'selected' : null"
+                      v-on:click="select(it, true)">
+                {{it.title}}
+                  <b typeof="Class">{{ld.getTypeLabelFor((it))}}</b>
+                  <span v-if="it.language">({{ it.language.label }})</span>
+              </button>
+            </li>
+          </menu>
+        </template>
+      </section>
       <main v-if="thing">
         <article :class="thing.instanceOf ? 'specific' : 'general'">
           <section typeof="Work" class="general" :style="workImage(thing.instanceOf || thing)">
